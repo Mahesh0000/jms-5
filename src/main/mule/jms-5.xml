@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:jms="http://www.mulesoft.org/schema/mule/jms" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/jms http://www.mulesoft.org/schema/mule/jms/current/mule-jms.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="84d175e1-6745-4e48-8fa2-f378261a9c5c" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<jms:config name="JMS_Config" doc:name="JMS Config" doc:id="0febe7bc-e174-487e-b67d-3ecb7770b350" >
+		<jms:active-mq-connection username="admin" password="admin" />
+	</jms:config>
+	<flow name="jms-5Flow" doc:id="960813e4-1c2d-4def-87b4-229c709b8ee5" >
+		<http:listener doc:name="Listener" doc:id="710d0b05-c5ef-42f1-8df8-7db43f2c8dae" config-ref="HTTP_Listener_config" path="/jms" allowedMethods="GET"/>
+		<set-payload doc:name="Set Payload" doc:id="e897c2bc-719f-4615-9b6d-39f90f86cbc4" value="#[attributes.queryParams.m]" mimeType="application/json"/>
+		<jms:publish doc:name="Publish" doc:id="1da604dd-275e-475d-9841-0398842fb376" config-ref="JMS_Config" destination="111222"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c36439e6-e721-4c74-9ae3-9aae4ebff793" message="#[payload]"/>
+	</flow>
+</mule>
